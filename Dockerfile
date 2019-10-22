@@ -10,7 +10,9 @@ LABEL com.redhat.component="jenkins-agent-python-rhel7-container" \
 ENV PYTHON_VERSION=3.7
 
 RUN INSTALL_PKGS="gcc openssl-devel bzip2-devel libffi-devel make wget" && \
-    yum install -y --disablerepo=rhel-7-server-htb-rpms --enablerepo=rhel-server-rhscl-7-rpms --setopt=tsflags=nodocs $INSTALL_PKGS && \
+    yum-config-manager --enable rhel-server-rhscl-7-rpms && \
+    yum-config-manager --disable rhel-7-server-htb-rpms && \
+    yum install -y --setopt=tsflags=nodocs $INSTALL_PKGS && \
     rpm -V $INSTALL_PKGS && \
     yum clean all -y && \
     rm -rf /var/cache/yum && \
