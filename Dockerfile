@@ -24,7 +24,7 @@ RUN INSTALL_PKGS="gcc openssl-devel bzip2-devel libffi-devel make wget" && \
     ln -s /usr/local/bin/python3.7 /usr/bin/python3 && \
     ln -s /usr/local/bin/pip3.7 /usr/bin/pip3 && \
     pip3 install --upgrade pip && \
-    pip3 install pipenv && \
+    pip3 install pipenv pylint && \
     chown -R 1001:0 $HOME && \
     chmod -R g+rw $HOME
 
