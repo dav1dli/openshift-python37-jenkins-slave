@@ -18,7 +18,7 @@ docker build -t jenkins-slave-python37-rhel7 .
 git clone https://github.com/dav1dli/openshift-python37-jenkins-slave.git .
 oc login -u developer
 oc project sonarqube
-cat Dockerfile | oc new-build --name docker build -t jenkins-slave-python37-rhel7 --dockerfile='-'
+cat Dockerfile | oc new-build --name jenkins-slave-python37-rhel7 --dockerfile='-'
 ```
 # Build the image on Openshift using template
 
