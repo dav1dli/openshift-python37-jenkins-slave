@@ -7,6 +7,9 @@ pipeline {
   options {
     timeout(time: 10, unit: 'MINUTES')
   }
+  environment {
+    imgName = 'openshift-python37-jenkins-slave'
+  }
   stages {
     stage('SCM') {
       steps {
@@ -17,15 +20,15 @@ pipeline {
       when {
         expression {
           openshift.withCluster() {
-            openshift.withProject('sonarqube') {
-              return !openshift.selector("bc", "openshift-python37-jenkins-slave").exists();
+            openshift.withProject() {
+              return !openshift.selector("bc", "${imgName}").exists();
             }
           }
         }
       }
       steps {
         sh '''
-          cat Dockerfile | oc new-build --name openshift-python37-jenkins-slave --dockerfile='-'
+          cat Dockerfile | oc new-build --name "${imgName}" --dockerfile='-'
           oc secrets link default 11009103-dliderma-pull-secret --for=pull
           oc secrets add serviceaccount/builder secrets/11009103-dliderma-pull-secret
         '''
@@ -36,7 +39,7 @@ pipeline {
         script {
           openshift.withCluster() {
             openshift.withProject('sonarqube') {
-              openshift.selector("bc", "openshift-python37-jenkins-slave").startBuild("--from-dir=.", "--wait=true")
+              openshift.selector("bc", "${imgName}").startBuild("--from-dir=.", "--wait=true")
             }
           }
         }
