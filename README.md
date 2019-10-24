@@ -1,6 +1,6 @@
 # Openshift Jenkins slave with Python 3.7
 
-This image is installed with Python 3.7.x runtime required by some components. The purpose is to have a Jenkins slave configration running Python tasks such as tests. Python 3.7.x is installed from sources. 
+This image is installed with Python 3.7.x runtime required by some components. The purpose is to have a Jenkins slave configration running Python tasks such as tests. Python 3.7.x is installed from sources.
 In the future when python 3.7 will be available as a package from supported repositories this configuration installing Python from sources could be simplified.
 
 The configuration uses standard RHEL7 image as a baseline. The configuration installs python 3.7 and dependencies required to build it.
@@ -16,9 +16,7 @@ docker build -t jenkins-slave-python37-rhel7 .
 
 ```
 git clone https://github.com/dav1dli/openshift-python37-jenkins-slave.git .
-oc login -u developer
-oc project sonarqube
-cat Dockerfile | oc new-build --name jenkins-slave-python37-rhel7 --dockerfile='-'
+cat Dockerfile | oc new-build --name jenkins-slave-python37 --dockerfile='-'
 ```
 # Build the image on Openshift using template
 
@@ -27,5 +25,4 @@ oc process -f jenkins-slave-python37-template.yml | oc create -f -
 ```
 
 # Jenkins build
-
-TBD
+Use provided Jenkinsfile to build and publish the image

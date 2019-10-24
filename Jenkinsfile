@@ -8,7 +8,7 @@ pipeline {
     timeout(time: 10, unit: 'MINUTES')
   }
   environment {
-    imgName = 'openshift-python37-jenkins-slave'
+    imgName = 'jenkins-slave-python37'
   }
   stages {
     stage('SCM') {
@@ -16,7 +16,7 @@ pipeline {
         git url: 'https://github.com/dav1dli/openshift-python37-jenkins-slave.git'
       }
     }
-    stage('NewBuild') {
+    stage('Build') {
       when {
         expression {
           openshift.withCluster() {
@@ -27,19 +27,21 @@ pipeline {
         }
       }
       steps {
-        sh '''
-          cat Dockerfile | oc new-build --name "${imgName}" --dockerfile='-'
-          oc secrets link default 11009103-dliderma-pull-secret --for=pull
-          oc secrets add serviceaccount/builder secrets/11009103-dliderma-pull-secret
-        '''
+        script {
+          openshift.withCluster() {
+            openshift.withProject() {
+              openshift.newApp("jenkins-slave-python37-template.yml")
+            }
+          }
+        }
       }
     }
-    stage('Build') {
+    stage('Tag') {
       steps {
         script {
           openshift.withCluster() {
-            openshift.withProject('sonarqube') {
-              openshift.selector("bc", "${imgName}").startBuild("--from-dir=.", "--wait=true")
+            openshift.withProject() {
+              openshift.tag("${imgName}:v3.11", "${imgName}:latest")
             }
           }
         }
